@@ -37,6 +37,14 @@ public class testTeleop extends LinearOpMode {
     private GateState gateState = GateState.CLOSED;
     private final ElapsedTime gateTimer = new ElapsedTime();
 
+    // Timers & Speeds for Buttons B & X
+    private final ElapsedTime runBackTimer = new ElapsedTime();
+    private static final double runBackRunTime = 1.50;
+    private boolean isRunBackTimerRunning = false;
+
+    private final ElapsedTime fasterSpeedTimer = new ElapsedTime();
+    private boolean isFasterSpeedTimerRunning = false;
+
     @Override
     public void runOpMode() {
 
@@ -70,7 +78,7 @@ public class testTeleop extends LinearOpMode {
         // TeleOp loop - runs continuously while match is active
         while (opModeIsActive()) {
 
-            // --- INTAKE MOTOR CONTROL ---
+            // --- INTAKE MOTOR CONTROL (BUTTON A) ---
             if (gamepad1.a) {
                 intakeTimer.reset(); // Reset timer when button A is pressed
                 isIntakeRunning = true;
@@ -81,27 +89,59 @@ public class testTeleop extends LinearOpMode {
                 isIntakeRunning = false;
             }
 
-            // Set motor power based on intake on or off
+            // Set motor power based on intake state
             if (isIntakeRunning) {
                 slurpItIntakeMotor.setPower(INTAKE_POWER);
-            } else {
+            } else if (!isRunBackTimerRunning && !isFasterSpeedTimerRunning) {
                 slurpItIntakeMotor.setPower(0.0);
             }
 
-            if (gamepad1.left_trigger > 0.3){
-                flyWheels.setPower(gamepad1.left_trigger);
-            } else {
-                flyWheels.setPower(0.3);
+            // --- RUN BACK CONTROL (BUTTON B) ---
+            if (gamepad1.b && !isRunBackTimerRunning) {
+                runBackTimer.reset();
+                isRunBackTimerRunning = true;
             }
-            // gate state machine
+
+            if (isRunBackTimerRunning) {
+                if (runBackTimer.seconds() < runBackRunTime) {
+                    slurpItIntakeMotor.setPower(-0.25);
+                    flyWheels.setPower(0.48);
+                } else {
+                    slurpItIntakeMotor.setPower(0.6);
+                    flyWheels.setPower(0.48);
+                }
+            }
+
+            // --- FASTER SPEED CONTROL (BUTTON X) ---
+            if (gamepad1.x && !isFasterSpeedTimerRunning) {
+                fasterSpeedTimer.reset();
+                isFasterSpeedTimerRunning = true;
+            }
+
+            if (isFasterSpeedTimerRunning) {
+                if (fasterSpeedTimer.seconds() < runBackRunTime) {
+                    slurpItIntakeMotor.setPower(-0.25);
+                    flyWheels.setPower(0.55);
+                } else {
+                    slurpItIntakeMotor.setPower(0.6);
+                    flyWheels.setPower(0.55);
+                }
+            }
+
+            // Turn off flywheels when neither timer sequence is running
+            if (!isRunBackTimerRunning && !isFasterSpeedTimerRunning) {
+                flyWheels.setPower(0.0);
+            }
+
+            // --- GATE STATE MACHINE ---
             switch (gateState) {
 
                 case CLOSED:
-                    // servo to closed position & stop transfer motor
+                    // Set servo to closed position & stop transfer motor
                     gateServo.setPosition(gardenClosed);
                     transferMotor.setPower(0.0);
 
-                    // 2. Wait for 3.0 seconds, then switch to OPEN
+                    // Wait for 3.0 seconds, then switch to OPEN
                     if (gateTimer.seconds() >= CLOSED_DURATION) {
                         gateState = GateState.OPEN;
                         gateTimer.reset();
@@ -109,11 +149,11 @@ public class testTeleop extends LinearOpMode {
                     break;
 
                 case OPEN:
-                    // 1. Set servo to open position & run transfer motor
+                    // Set servo to open position & run transfer motor
                     gateServo.setPosition(gardenOpen);
                     transferMotor.setPower(TRANSFER_SPEED);
 
-                    // 2. Wait for 3.0 seconds, then switch back to CLOSED
+                    // Wait for 3.0 seconds, then switch back to CLOSED
                     if (gateTimer.seconds() >= OPEN_DURATION) {
                         gateState = GateState.CLOSED;
                         gateTimer.reset();
@@ -121,6 +161,7 @@ public class testTeleop extends LinearOpMode {
                     break;
             }
 
+            // --- TELEMETRY ---
             telemetry.addData("Intake Active", isIntakeRunning);
             if (isIntakeRunning) {
                 telemetry.addData("Intake Time Remaining", "%.1f sec", INTAKE_RUN_TIME_SECONDS - intakeTimer.seconds());
@@ -128,7 +169,7 @@ public class testTeleop extends LinearOpMode {
             telemetry.addData("Gate State", gateState);
             telemetry.addData("State Time Remaining", "%.1f sec",
                     (gateState == GateState.CLOSED ? CLOSED_DURATION : OPEN_DURATION) - gateTimer.seconds());
-
+            telemetry.update();
         }
     }
 }
