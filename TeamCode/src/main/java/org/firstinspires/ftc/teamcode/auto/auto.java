@@ -68,7 +68,7 @@ public class auto extends LinearOpMode {
         // A. Rev up flywheels
         telemetry.addData("Auto Status", "Revving Flywheels...");
         telemetry.update();
-        flyWheels.setPower(0.85); // Turn on flywheel
+        flyWheels.setPower(0.50); // Turn on flywheel
         sleep(1000);              // Wait 1 second to reach full speed
 
         // B. Shoot 4 balls by cycling gate and transfer motor 4 times
