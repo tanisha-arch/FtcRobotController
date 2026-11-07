@@ -9,7 +9,14 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class auto extends LinearOpMode {
 
     // Declare hardware variables
-    private DcMotor leftDrive = null;
+    private DcMotor frontLeft;
+    private DcMotor frontRight;
+    private DcMotor backLeft;
+    private DcMotor backRight;
+    private DcMotor shooterMotor;
+    private DcMotor intakeMotor;
+    private DcMotor transferMotor;
+    private   DcMotor leftDrive = null;
     private DcMotor rightDrive = null;
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -39,12 +46,49 @@ public class auto extends LinearOpMode {
             telemetry.update();
         }
 
+        // STEP 2: Spin/Turn Right for 0.8 seconds
+        leftDrive.setPower(0.5);
+        rightDrive.setPower(-0.5);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 0.8)) {
+            telemetry.addData("Path", "Leg 2: Spin Left");
+            telemetry.update();
+        }
+
+        leftDrive.setPower(0.5);
+        rightDrive.setPower(0.5);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 0.5)) {
+            telemetry.addData("Path", "Leg 1: Drive Forward");
+            telemetry.update();
+        }
         // STEP 2: Spin/Turn Left for 0.8 seconds
         leftDrive.setPower(-0.5);
         rightDrive.setPower(0.5);
         runtime.reset();
         while (opModeIsActive() && (runtime.seconds() < 0.8)) {
             telemetry.addData("Path", "Leg 2: Spin Left");
+            telemetry.update();
+        }
+        leftDrive.setPower(0.5);
+        rightDrive.setPower(0.5);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 0.8)) {
+            telemetry.addData("Path", "Leg 1: Drive Forward");
+            telemetry.update();
+        }
+        leftDrive.setPower(0.5);
+        rightDrive.setPower(-0.5);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 0.3)) {
+            telemetry.addData("Path", "Leg 2: Spin Left");
+            telemetry.update();
+        }
+        leftDrive.setPower(0.5);
+        rightDrive.setPower(0.5);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 1.5)) {
+            telemetry.addData("Path", "Leg 1: Drive Forward");
             telemetry.update();
         }
 
