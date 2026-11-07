@@ -24,7 +24,7 @@ public class blueAuto extends LinearOpMode {
     private DcMotor frontRightMotor;
     private DcMotor backRightMotor;
     private  ElapsedTime timer = new ElapsedTime();
-    private static final double moveForwardTime = 1.5;
+    private static final double moveForwardTime = 1.6;
     private boolean autoIsOn = false;
 
     public void runOpMode() {
