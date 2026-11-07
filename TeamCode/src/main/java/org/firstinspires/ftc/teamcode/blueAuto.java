@@ -11,8 +11,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous
 public class blueAuto extends LinearOpMode {
+    //THIS CAN BE USED FOR THE RED ONE TOO, DON'T WORRY IT'S THE SAME THING BRO
     private double targetShooterVel = 1120.0;
-
 
     private DcMotor intakeMotor;
     private DcMotor transferMotor;
@@ -24,8 +24,9 @@ public class blueAuto extends LinearOpMode {
     private DcMotor frontRightMotor;
     private DcMotor backRightMotor;
     private  ElapsedTime timer = new ElapsedTime();
-    private static final double moveForwardTime = 1.6;
+
     private boolean autoIsOn = false;
+    double x = -1.0  *1.1; //YEAH WHAT WE DNOT NEED THIS
 
     public void runOpMode() {
         intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor");
@@ -42,67 +43,71 @@ public class blueAuto extends LinearOpMode {
 
         shooterMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         shooterMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         waitForStart();
         timer.reset();
-        if (timer.seconds()>0.8);
-            intakeMotor.setPower(.0);
-            transferMotor.setPower(.0);
-            shooterMotor.setVelocity(1180);
-
-
-        while (opModeIsActive() && (timer.seconds() > 5.0 )){
-            intakeMotor.setPower(1.0);
-            transferMotor.setPower(1.0);
-            shooterMotor.setVelocity(1180);
-        }
-        while (opModeIsActive() && (timer.seconds() > 5.5 )){
+        while (opModeIsActive() && (timer.seconds() < 5.0 )) {
             intakeMotor.setPower(0.0);
             transferMotor.setPower(0.0);
             shooterMotor.setVelocity(1180);
         }
-        while (opModeIsActive() && (timer.seconds() > 5.8 )){
-            intakeMotor.setPower(1.0);
+        while (opModeIsActive() && (timer.seconds() < 5.5 )){ //MIGHT HAVE TO CHANGE THIS 5.5 VALUE DOWN
+            intakeMotor.setPower(1.0); //check how long it takes before 2nd round is launched
             transferMotor.setPower(1.0);
             shooterMotor.setVelocity(1180);
         }
-        while (opModeIsActive() && (timer.seconds() > 7.0 )){
+        while (opModeIsActive() && (timer.seconds() < 6.5 )){
+        //leaving blank as a wait,
+        }
+        while (opModeIsActive() && (timer.seconds() < 10.0 )){
+            intakeMotor.setPower(0.0);
+            transferMotor.setPower(0.0);
+            shooterMotor.setVelocity(1180);
+        }
+        while (opModeIsActive() && (timer.seconds() < 12.5 )){
+            intakeMotor.setPower(1.0); //check how long it takes before 2nd round is launched
+            transferMotor.setPower(1.0);
+            shooterMotor.setVelocity(1180);
+        }
+        while (opModeIsActive() && (timer.seconds() < 13.6 )){ //moving forward time either adjust time or power
             frontLeftMotor.setPower(1.0);
             frontRightMotor.setPower(1.0);
             backLeftMotor.setPower(1.0);
             backRightMotor.setPower(1.0);
         }
+        while (opModeIsActive() && (timer.seconds() < 15.6 )){
+            frontLeftMotor.setPower(-1.0);
+            frontRightMotor.setPower(1.0);
+            backLeftMotor.setPower(1.0);
+            backRightMotor.setPower(-1.0);
+            //reverse FL and BR for left strafing
+        }
+        while (opModeIsActive() && (timer.seconds() < 18.2 )){ //moving forward time either adjust time or power to get into the park spot
+                frontLeftMotor.setPower(1.0);
+                frontRightMotor.setPower(1.0);
+                backLeftMotor.setPower(1.0);
+                backRightMotor.setPower(1.0);
+            }
+        while (opModeIsActive() && (timer.seconds() < 20.0 )){
+                frontLeftMotor.setPower(-1.0);
+                frontRightMotor.setPower(1.0);
+                backLeftMotor.setPower(1.0);
+                backRightMotor.setPower(-1.0);
+                //reverse FL and BR for left strafing
+            }
+            while (opModeIsActive() && (timer.seconds() < 30 )){
+                frontLeftMotor.setPower(0.0);
+                frontRightMotor.setPower(0.0);
+                backLeftMotor.setPower(0.0);
+                backRightMotor.setPower(0.0);
+            } //should I do a while loop or just say stop it without the while loop
         //turning left a bit
-        while (opModeIsActive() && (timer.seconds() < 7.0 )){
-            frontLeftMotor.setPower(-0.5);
-            frontRightMotor.setPower(0.5);
-            backLeftMotor.setPower(-0.5);
-            backRightMotor.setPower(0.5);
-        }
-        while (opModeIsActive() && (timer.seconds() > 7.4 )){
-            frontLeftMotor.setPower(1.0);
-            frontRightMotor.setPower(1.0);
-            backLeftMotor.setPower(1.0);
-            backRightMotor.setPower(1.0);
-        }
-        while (opModeIsActive() && (timer.seconds() < 8.6 )){
-            frontLeftMotor.setPower(0.5);
-            frontRightMotor.setPower(-0.5);
-            backLeftMotor.setPower(0.5);
-            backRightMotor.setPower(-0.5);
-        }
-        while (opModeIsActive() && (timer.seconds() < 7.0 )){
-            frontLeftMotor.setPower(-0.5);
-            frontRightMotor.setPower(0.5);
-            backLeftMotor.setPower(-0.5);
-            backRightMotor.setPower(0.5);
-        }
-        while (opModeIsActive() && (timer.seconds() > 9.1 )){
-            frontLeftMotor.setPower(1.0);
-            frontRightMotor.setPower(1.0);
-            backLeftMotor.setPower(1.0);
-            backRightMotor.setPower(1.0);
-        }
+
+            telemetry.addData("Auto done :0) hehehae", "timer");
     }}
 
-//helloo???
+
