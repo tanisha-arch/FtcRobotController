@@ -53,7 +53,7 @@ public class testTeleop extends LinearOpMode {
 
         // 1. Hardware Mapping
         slurpItIntakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor");
-        transferMotor = hardwareMap.get(DcMotor.class, "tranferMotor");
+        transferMotor = hardwareMap.get(DcMotor.class, "transferMotor");
         flyWheels = hardwareMap.get(DcMotor.class, "flyWheels");
         gateServo = hardwareMap.get(Servo.class, "gateServo");
         flagPole = hardwareMap.get(Servo.class, "flagPole");
